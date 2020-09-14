@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">My Ip Info</string>
+
+    <string name="error_text">An error occurred while loading Data.</string>
+
+    <string name="close_popup_window_title">What do you want to do?</string>
+    <string name="close_the_app_text">Close the app</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="asn"><u>ASN:</u></string>
+    <string name="organization"><u>Organization:</u></string>
+    <string name="continent"><u>Continent:</u></string>
+    <string name="country"><u>Country:</u></string>
+    <string name="city"><u>City:</u></string>
+    <string name="latitude"><u>Latitude:</u></string>
+    <string name="longitude"><u>Longitude:</u></string>
+    <string name="timezone"><u>Timezone:</u></string>
+    <string name="my_ip"><u>My IP:</u></string>
+</resources>
