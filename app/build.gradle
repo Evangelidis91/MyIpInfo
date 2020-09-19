@@ -39,10 +39,16 @@ android {
         jvmTarget = '1.8'
     }
 
+    signingConfigs {
+        dev {
+            v2SigningEnabled true
+        }
+    }
+
 }
 
 def retrofitVersion = '2.9.0'
-def daggerVersion = '2.28'
+def daggerVersion = '2.29.1'
 def rxJavaVersion = '2.1.1'
 
 dependencies {
