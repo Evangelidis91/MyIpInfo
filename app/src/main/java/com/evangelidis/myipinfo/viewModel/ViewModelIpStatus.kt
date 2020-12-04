@@ -2,9 +2,9 @@ package com.evangelidis.myipinfo.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.evangelidis.myipinfo.di.DaggerApiComponent
 import com.evangelidis.myipinfo.models.IpDataResponse
 import com.evangelidis.myipinfo.models.api.IpService
-import com.evangelidis.myipinfo.di.DaggerApiComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -36,7 +36,7 @@ class ViewModelIpStatus : ViewModel() {
             ipService.getIpInfo(ip)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<IpDataResponse>(){
+                .subscribeWith(object : DisposableSingleObserver<IpDataResponse>() {
                     override fun onSuccess(response: IpDataResponse) {
                         ipInfo.value = response
                         loadError.value = false

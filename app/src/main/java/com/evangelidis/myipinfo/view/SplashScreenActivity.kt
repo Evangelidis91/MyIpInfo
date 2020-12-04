@@ -1,12 +1,12 @@
 package com.evangelidis.myipinfo.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import com.evangelidis.myipinfo.utils.Constants.SPLASHSCREEN_TIME
+import androidx.appcompat.app.AppCompatActivity
 import com.evangelidis.myipinfo.R
+import com.evangelidis.myipinfo.utils.Constants.SPLASHSCREEN_TIME
 
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

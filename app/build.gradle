@@ -1,4 +1,8 @@
 plugins {
+    id("io.gitlab.arturbosch.detekt").version("1.9.1")
+}
+
+plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
@@ -14,17 +18,31 @@ android {
         applicationId "com.evangelidis.myipinfo"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release
+    }
+
     buildTypes {
         release {
+            manifestPlaceholders
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+            manifestPlaceholders.mapKey = "AIzaSyAXTKX21v-NnKTrM8pDhZTuHuU9kroKUpY"
+        }
+
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders.mapKey = "AIzaSyBZVGT9wfKuko85vQ77pU7ypKKXnGCclfg"
         }
     }
 
@@ -40,11 +58,26 @@ android {
     }
 
     signingConfigs {
-        dev {
+        release {
             v2SigningEnabled true
+            storeFile file('C:\\Users\\euagg\\android.jks')
+            keyAlias 'myandroidkey'
+            storePassword '123456'
+            keyPassword '123456'
         }
     }
+}
 
+detekt {
+    toolVersion = '1.9.1'
+    input = files(
+            "src/main/java",
+            "src/debug/java",
+            "src/release/java"
+    )
+    autoCorrect = true
+    baseline = file("../detekt/detekt-baseline.xml")
+    config = files("../detekt/detekt-config.yml")
 }
 
 def retrofitVersion = '2.9.0'
@@ -54,12 +87,12 @@ def rxJavaVersion = '2.1.1'
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    testImplementation 'junit:junit:4.13'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.13.1'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -79,7 +112,9 @@ dependencies {
     implementation 'com.tuyenmonkey:mkloader:1.4.0'
     implementation 'com.github.Evangelidis91:TanTinToast:1.1.3'
 
-    implementation 'com.google.firebase:firebase-analytics:17.5.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.9.1"
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

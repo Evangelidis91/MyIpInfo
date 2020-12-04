@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <Blacklist></Blacklist>
+  <Whitelist>
+    <ID>TooGenericExceptionCaught:InternetStatus.kt$InternetStatus$e: Exception</ID>
+    <ID>TooManyFunctions:ViewExtensions.kt$com.evangelidis.myipinfo.extensions.ViewExtensions.kt</ID>
+    <ID>UnnecessaryLet:MapView.kt$MapView$let { it.apply { addMarker(MarkerOptions().position(position)) moveCamera(CameraUpdateFactory.newLatLng(position)) animateCamera(CameraUpdateFactory.newLatLngZoom(position, GOOGLE_MAP_ZOOM_LEVEL)) } }</ID>
+    <ID>UnusedPrivateMember:MapView.kt$MapView$attrs: AttributeSet?</ID>
+  </Whitelist>
+</SmellBaseline>
