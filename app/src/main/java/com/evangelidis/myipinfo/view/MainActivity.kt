@@ -5,6 +5,10 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
+import com.evangelidis.myipinfo.R
+import com.evangelidis.myipinfo.databinding.ActivityMainBinding
+import com.evangelidis.myipinfo.extensions.gone
+import com.evangelidis.myipinfo.extensions.show
 import com.evangelidis.myipinfo.utils.Constants.AFRICA
 import com.evangelidis.myipinfo.utils.Constants.AFRICA_CODE
 import com.evangelidis.myipinfo.utils.Constants.ANTARCTICA
@@ -22,10 +26,6 @@ import com.evangelidis.myipinfo.utils.Constants.SOUTH_AMERICA_CODE
 import com.evangelidis.myipinfo.utils.GetPublicIP
 import com.evangelidis.myipinfo.utils.InternetStatus
 import com.evangelidis.myipinfo.viewModel.ViewModelIpStatus
-import com.evangelidis.myipinfo.R
-import com.evangelidis.myipinfo.databinding.ActivityMainBinding
-import com.evangelidis.myipinfo.extensions.gone
-import com.evangelidis.myipinfo.extensions.show
 import com.evangelidis.tantintoast.TanTinToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

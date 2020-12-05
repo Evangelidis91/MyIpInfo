@@ -1,9 +1,9 @@
 package com.evangelidis.myipinfo.models.api
 
+import com.evangelidis.myipinfo.di.DaggerApiComponent
 import com.evangelidis.myipinfo.models.IpDataResponse
 import io.reactivex.Single
 import javax.inject.Inject
-import com.evangelidis.myipinfo.di.DaggerApiComponent
 
 class IpService {
 
