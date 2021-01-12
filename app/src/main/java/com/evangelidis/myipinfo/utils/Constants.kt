@@ -23,4 +23,5 @@ object Constants {
     const val NORTH_AMERICA = "North America"
     const val OCEANIA = "Oceania"
     const val SOUTH_AMERICA = "South America"
+    const val UNKNOWN = "UNKNOWN"
 }
