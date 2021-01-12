@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.evangelidis.myipinfo.R
 import com.evangelidis.myipinfo.databinding.ActivityMainBinding
 import com.evangelidis.myipinfo.extensions.gone
 import com.evangelidis.myipinfo.extensions.show
+import com.evangelidis.myipinfo.models.InfoModel
+import com.evangelidis.myipinfo.models.IpDataResponse
 import com.evangelidis.myipinfo.utils.Constants.AFRICA
 import com.evangelidis.myipinfo.utils.Constants.AFRICA_CODE
 import com.evangelidis.myipinfo.utils.Constants.ANTARCTICA
@@ -23,6 +27,7 @@ import com.evangelidis.myipinfo.utils.Constants.OCEANIA
 import com.evangelidis.myipinfo.utils.Constants.OCEANIA_CODE
 import com.evangelidis.myipinfo.utils.Constants.SOUTH_AMERICA
 import com.evangelidis.myipinfo.utils.Constants.SOUTH_AMERICA_CODE
+import com.evangelidis.myipinfo.utils.Constants.UNKNOWN
 import com.evangelidis.myipinfo.utils.GetPublicIP
 import com.evangelidis.myipinfo.utils.InternetStatus
 import com.evangelidis.myipinfo.viewModel.ViewModelIpStatus
@@ -37,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    private val displayInfo = mutableListOf<InfoModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -48,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         if (InternetStatus.getInstance(this).isOnline) {
             getIp()
         } else {
-            TanTinToast.Warning(this).text(getString(R.string.error_text)).typeface(R.font.montserrat_medium).show()
+            TanTinToast.Warning(this).text(getString(R.string.error_text))
+                .typeface(R.font.montserrat_medium).show()
             binding.ipInfoGroup.gone()
         }
 
@@ -76,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         binding.loader.show()
         val task = GetPublicIP()
 
-        GlobalScope.launch(context = Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main) {
             task.execute()
             val publicIp = task.get().toString()
             viewModel.getIpInfo(publicIp)
@@ -85,34 +93,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.ipInfo.observe(this, { data ->
+        viewModel.ipInfo.observe(this, Observer { data ->
             data?.let {
                 with(binding) {
                     map.addMarker(it.latitude, it.longitude)
                     ip.text = it.ip
-                    asn.text = it.asn
-                    organization.text = it.org
-                    country.text = it.country
-                    city.text = it.city
-                    latitude.text = it.latitude.toString()
-                    longitude.text = it.longitude.toString()
-                    timezone.text = it.timezone
-                    setContinent(it.continentCode)
                 }
+                setList(it)
             }
         })
 
-        viewModel.loadError.observe(this, { isError ->
+        viewModel.loadError.observe(this, Observer { isError ->
             isError?.let {
                 binding.ipInfoGroup.visibility = if (it) View.GONE else View.VISIBLE
                 binding.listError.visibility = if (it) View.VISIBLE else View.GONE
                 if (it) {
-                    TanTinToast.Warning(this).text("An error occurred while loading Data.").typeface(R.font.montserrat_medium).show()
+                    TanTinToast.Warning(this).text("An error occurred while loading Data.")
+                        .typeface(R.font.montserrat_medium).show()
                 }
             }
         })
 
-        viewModel.loading.observe(this, { isLoading ->
+        viewModel.loading.observe(this, Observer { isLoading ->
             isLoading?.let {
                 with(binding) {
                     loader.visibility = if (it) View.VISIBLE else View.GONE
@@ -123,8 +125,28 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setContinent(continentCode: String) {
-        binding.continent.text = when (continentCode) {
+    private fun setList(ipDataResponse: IpDataResponse) {
+        displayInfo.apply {
+            clear()
+            add(InfoModel("ASN", ipDataResponse.asn))
+            add(InfoModel("Organization", ipDataResponse.org))
+            add(InfoModel("Continent", setContinent(ipDataResponse.continentCode)))
+            add(InfoModel("Country", ipDataResponse.country))
+            add(InfoModel("City", ipDataResponse.city))
+            add(InfoModel("Latitude", ipDataResponse.latitude.toString()))
+            add(InfoModel("Longitude", ipDataResponse.longitude.toString()))
+            add(InfoModel("Timezone", ipDataResponse.timezone))
+        }
+
+        val ipInfoAdapter = IpInfoAdapter(displayInfo)
+        binding.ipInfoList.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = ipInfoAdapter
+        }
+    }
+
+    private fun setContinent(continentCode: String): String {
+        return when (continentCode) {
             AFRICA_CODE -> AFRICA
             ANTARCTICA_CODE -> ANTARCTICA
             ASIA_CODE -> ASIA
@@ -132,7 +154,7 @@ class MainActivity : AppCompatActivity() {
             NORTH_AMERICA_CODE -> NORTH_AMERICA
             OCEANIA_CODE -> OCEANIA
             SOUTH_AMERICA_CODE -> SOUTH_AMERICA
-            else -> EUROPE
+            else -> UNKNOWN
         }
     }
 }
